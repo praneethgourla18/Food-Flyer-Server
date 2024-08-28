@@ -1,15 +1,12 @@
 const express = require('express');
-const axios = require('axios');
 const cors = require('cors');
+const axios = require('axios');
 
 const app = express();
-const port = process.env.PORT || 3000;
-
-// Enable CORS for all routes
 app.use(cors());
 
 // Endpoint to fetch restaurants
-app.get('/api/restaurants', async (req, res) => {
+app.get('/restaurants', async (req, res) => {
     const lat = req.query.lat || '17.4875418';
     const lng = req.query.lng || '78.3953462';
     const url = `https://www.swiggy.com/dapi/restaurants/list/v5?lat=${lat}&lng=${lng}&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING`;
@@ -28,11 +25,11 @@ app.get('/api/restaurants', async (req, res) => {
 });
 
 // Endpoint to fetch menu by restaurant ID
-app.get('/api/menu', async (req, res) => {
+app.get('/menu', async (req, res) => {
     const { resId } = req.query;
     const lat = req.query.lat || '17.4875418';
     const lng = req.query.lng || '78.3953462';
-    
+
     if (!resId) {
         return res.status(400).send('restaurantId is required');
     }
@@ -52,11 +49,13 @@ app.get('/api/menu', async (req, res) => {
     }
 });
 
-// Test route to check if server is running
+// Default route
 app.get('/', (req, res) => {
     res.send('Food-Flyer Server is running');
 });
 
+// Start the server
+const port = process.env.PORT || 3000;
 app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
+    console.log(`Server running on http://localhost:${port}`);
 });
